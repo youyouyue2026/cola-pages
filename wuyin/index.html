@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>五音疗法 · 以音调身，循五行之道</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600;700&family=ZCOOL+XiaoWei&display=swap');
+
+  :root {
+    --wood: #5B8C5A; --wood-light: #E8F3E5; --wood-dark: #3A5A39;
+    --fire: #C95B5B; --fire-light: #FDEAEA; --fire-dark: #8B3A3A;
+    --earth: #D4A54A; --earth-light: #FCF3E3; --earth-dark: #8B6914;
+    --metal: #B0A89A; --metal-light: #F5F2EC; --metal-dark: #5C5448;
+    --water: #4A6FA5; --water-light: #E5EDF7; --water-dark: #2C4A7C;
+    --bg: #FAF8F5; --text: #2D2A26; --ink: #1A1612;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Serif SC', serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 20% 20%, rgba(91,140,90,0.03) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(74,111,165,0.03) 0%, transparent 50%);
+  }
+
+  .hero {
+    text-align: center;
+    padding: 50px 20px 30px;
+  }
+  .hero h1 { font-family: 'ZCOOL XiaoWei', serif; font-size: 44px; font-weight: 400; color: var(--ink); letter-spacing: 6px; margin-bottom: 8px; }
+  .hero .subtitle { font-size: 15px; color: #8B8578; letter-spacing: 4px; font-weight: 300; }
+
+  .container { max-width: 640px; margin: 0 auto; padding: 0 20px; }
+
+  /* Section title */
+  .section-title {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    margin: 32px 0 16px;
+    padding-left: 12px;
+    border-left: 3px solid var(--ink);
+  }
+
+  /* Symptom chips */
+  .symptom-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .chip {
+    padding: 10px 18px;
+    border-radius: 24px;
+    border: 1.5px solid #E0DCD5;
+    background: white;
+    font-family: 'Noto Serif SC', serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    color: var(--text);
+    user-select: none;
+    letter-spacing: 1px;
+  }
+
+  .chip:hover { border-color: #C4BBA8; background: #FAF7F2; }
+  .chip:active { transform: scale(0.96); }
+
+  .chip.selected[data-element="wood"]  { background: var(--wood-light); border-color: var(--wood); color: var(--wood-dark); }
+  .chip.selected[data-element="fire"]  { background: var(--fire-light); border-color: var(--fire); color: var(--fire-dark); }
+  .chip.selected[data-element="earth"] { background: var(--earth-light); border-color: var(--earth); color: var(--earth-dark); }
+  .chip.selected[data-element="metal"] { background: var(--metal-light); border-color: var(--metal); color: var(--metal-dark); }
+  .chip.selected[data-element="water"] { background: var(--water-light); border-color: var(--water); color: var(--water-dark); }
+
+  /* Element nav */
+  .element-nav {
+    display: flex;
+    justify-content: center;
+    gap: 2px;
+    margin: 16px 0;
+    flex-wrap: wrap;
+  }
+  .elem-nav-item {
+    padding: 6px 18px;
+    border-radius: 16px;
+    font-size: 13px;
+    cursor: pointer;
+    letter-spacing: 2px;
+    transition: all 0.25s;
+    border: 1.5px solid transparent;
+    background: transparent;
+    font-family: 'Noto Serif SC', serif;
+    color: #9B9588;
+  }
+  .elem-nav-item:hover { color: var(--text); }
+  .elem-nav-item.active.wood  { background: var(--wood-light); color: var(--wood); border-color: var(--wood); }
+  .elem-nav-item.active.fire  { background: var(--fire-light); color: var(--fire); border-color: var(--fire); }
+  .elem-nav-item.active.earth { background: var(--earth-light); color: var(--earth-dark); border-color: var(--earth); }
+  .elem-nav-item.active.metal { background: var(--metal-light); color: var(--metal-dark); border-color: var(--metal); }
+  .elem-nav-item.active.water { background: var(--water-light); color: var(--water); border-color: var(--water); }
+
+  /* Result */
+  .result-area { margin: 32px 0 60px; display: none; }
+  .result-area.show { display: block; }
+
+  .result-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .result-header h2 { font-family: 'ZCOOL XiaoWei', serif; font-size: 22px; letter-spacing: 4px; }
+
+  .btn-reset {
+    padding: 8px 20px; border-radius: 20px; border: 1.5px solid #E0DCD5;
+    background: white; font-family: 'Noto Serif SC', serif; font-size: 13px;
+    cursor: pointer; color: #9B9588; letter-spacing: 1px;
+  }
+  .btn-reset:hover { border-color: #C4BBA8; color: var(--text); }
+
+  .result-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px 28px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    animation: fadeIn 0.5s ease both;
+    border-left: 4px solid transparent;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .result-card.wood  { border-left-color: var(--wood); }
+  .result-card.fire  { border-left-color: var(--fire); }
+  .result-card.earth { border-left-color: var(--earth); }
+  .result-card.metal { border-left-color: var(--metal-dark); }
+  .result-card.water { border-left-color: var(--water); }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  .result-icon {
+    font-size: 32px; width: 52px; height: 52px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .result-card.wood  .result-icon { background: var(--wood-light); }
+  .result-card.fire  .result-icon { background: var(--fire-light); }
+  .result-card.earth .result-icon { background: var(--earth-light); }
+  .result-card.metal .result-icon { background: var(--metal-light); }
+  .result-card.water .result-icon { background: var(--water-light); }
+
+  .result-body { flex: 1; }
+  .result-body h3 { font-size: 17px; font-weight: 600; letter-spacing: 2px; margin-bottom: 4px; }
+  .result-body .matched { font-size: 12px; color: #9B9588; margin-bottom: 8px; }
+  .result-body .desc { font-size: 13px; color: #8B8578; margin-bottom: 10px; line-height: 1.6; }
+  .qq-link {
+    display: inline-block; padding: 8px 18px; border-radius: 20px;
+    font-size: 13px; text-decoration: none; letter-spacing: 1px; transition: all 0.25s;
+  }
+  .result-card.wood  .qq-link { background: var(--wood-light); color: var(--wood); }
+  .result-card.fire  .qq-link { background: var(--fire-light); color: var(--fire); }
+  .result-card.earth .qq-link { background: var(--earth-light); color: var(--earth-dark); }
+  .result-card.metal .qq-link { background: var(--metal-light); color: var(--metal-dark); }
+  .result-card.water .qq-link { background: var(--water-light); color: var(--water); }
+  .qq-link:hover { filter: brightness(0.95); }
+
+  .footer { text-align: center; padding: 30px; color: #C4BBA8; font-size: 12px; letter-spacing: 2px; border-top: 1px solid #F0EDE6; }
+
+  .empty-result {
+    text-align: center; padding: 40px; color: #B0A89A; font-size: 15px; letter-spacing: 2px;
+  }
+
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 30px; }
+    .chip { padding: 8px 14px; font-size: 13px; }
+    .result-card { flex-direction: column; text-align: center; padding: 20px; }
+    .section-title { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>五音疗法</h1>
+  <p class="subtitle">以音调身 · 循五行之道</p>
+</div>
+
+<div class="container">
+
+  <div class="section-title">您现在感觉如何？<span style="font-weight:300;font-size:13px;color:#B0A89A;margin-left:8px;">不适状态 & 愉悦状态都可选</span></div>
+
+  <div class="element-nav" id="elementNav">
+    <span class="elem-nav-item active wood" onclick="filterBy('all')">全部</span>
+    <span class="elem-nav-item wood"  onclick="filterBy('wood')" >🌳 肝</span>
+    <span class="elem-nav-item fire"  onclick="filterBy('fire')" >🔥 心</span>
+    <span class="elem-nav-item earth" onclick="filterBy('earth')">🏔️ 脾</span>
+    <span class="elem-nav-item metal" onclick="filterBy('metal')">🌬️ 肺</span>
+    <span class="elem-nav-item water" onclick="filterBy('water')">🌊 肾</span>
+  </div>
+
+  <div class="symptom-grid" id="symptomGrid"></div>
+
+  <div class="result-area" id="results">
+    <div class="result-header">
+      <h2>为您推荐<span id="matchCount"></span></h2>
+      <button class="btn-reset" onclick="resetAll()">重新选择</button>
+    </div>
+    <div id="resultList"></div>
+  </div>
+
+</div>
+
+<div class="footer">五音入五脏 · 以乐为药</div>
+
+<script>
+const symptoms = [
+  // Wood - 肝
+  { text: '心情烦躁、易怒',     element: 'wood', organ: '肝', organName: '肝脏', type: '不适' },
+  { text: '眼睛干涩、视力模糊', element: 'wood', organ: '肝', organName: '肝脏', type: '不适' },
+  { text: '胸闷、胁肋胀痛',     element: 'wood', organ: '肝', organName: '肝脏', type: '不适' },
+  { text: '经前乳房胀痛',       element: 'wood', organ: '肝', organName: '肝脏', type: '不适' },
+  { text: '头晕目眩',           element: 'wood', organ: '肝', organName: '肝脏', type: '不适' },
+  { text: '压力大、焦虑不安',   element: 'wood', organ: '肝', organName: '肝脏', type: '不适' },
+  { text: '容易叹气、胸口堵得慌', element: 'wood', organ: '肝', organName: '肝脏', type: '不适' },
+  { text: '偏头痛、太阳穴跳痛', element: 'wood', organ: '肝', organName: '肝脏', type: '不适' },
+  { text: '心情舒畅、豁然开朗', element: 'wood', organ: '肝', organName: '肝脏', type: '愉悦' },
+  { text: '精力充沛、干劲十足', element: 'wood', organ: '肝', organName: '肝脏', type: '愉悦' },
+  { text: '灵感涌动、创造力爆棚', element: 'wood', organ: '肝', organName: '肝脏', type: '愉悦' },
+  // Fire - 心
+  { text: '心烦失眠、入睡困难', element: 'fire', organ: '心', organName: '心脏', type: '不适' },
+  { text: '多梦易醒',           element: 'fire', organ: '心', organName: '心脏', type: '不适' },
+  { text: '口舌生疮、舌尖红',   element: 'fire', organ: '心', organName: '心脏', type: '不适' },
+  { text: '心慌心悸',           element: 'fire', organ: '心', organName: '心脏', type: '不适' },
+  { text: '精神恍惚、注意力差', element: 'fire', organ: '心', organName: '心脏', type: '不适' },
+  { text: '手心发热、盗汗',     element: 'fire', organ: '心', organName: '心脏', type: '不适' },
+  { text: '容易受惊、胆小不安', element: 'fire', organ: '心', organName: '心脏', type: '不适' },
+  { text: '心情愉悦、开心满足', element: 'fire', organ: '心', organName: '心脏', type: '愉悦' },
+  { text: '精神饱满、神采奕奕', element: 'fire', organ: '心', organName: '心脏', type: '愉悦' },
+  { text: '想聊天、分享欲旺盛', element: 'fire', organ: '心', organName: '心脏', type: '愉悦' },
+  { text: '想唱歌、想表达',     element: 'fire', organ: '心', organName: '心脏', type: '愉悦' },
+  // Earth - 脾
+  { text: '食欲不振、吃不下饭', element: 'earth', organ: '脾', organName: '脾胃', type: '不适' },
+  { text: '腹胀、消化不良',     element: 'earth', organ: '脾', organName: '脾胃', type: '不适' },
+  { text: '大便稀溏、不成形',   element: 'earth', organ: '脾', organName: '脾胃', type: '不适' },
+  { text: '浑身乏力、不想动',   element: 'earth', organ: '脾', organName: '脾胃', type: '不适' },
+  { text: '面色萎黄、气色差',   element: 'earth', organ: '脾', organName: '脾胃', type: '不适' },
+  { text: '口淡无味、吃啥都不香', element: 'earth', organ: '脾', organName: '脾胃', type: '不适' },
+  { text: '思虑过度、脑子停不下来', element: 'earth', organ: '脾', organName: '脾胃', type: '不适' },
+  { text: '肌肉松弛、容易水肿', element: 'earth', organ: '脾', organName: '脾胃', type: '不适' },
+  { text: '胃口好、吃得香',     element: 'earth', organ: '脾', organName: '脾胃', type: '愉悦' },
+  { text: '身体轻松、不累不困', element: 'earth', organ: '脾', organName: '脾胃', type: '愉悦' },
+  { text: '满足安定、被好好爱着', element: 'earth', organ: '脾', organName: '脾胃', type: '愉悦' },
+  // Metal - 肺
+  { text: '咳嗽、喉咙不适',     element: 'metal', organ: '肺', organName: '肺脏', type: '不适' },
+  { text: '气短、呼吸不畅',     element: 'metal', organ: '肺', organName: '肺脏', type: '不适' },
+  { text: '鼻塞、流鼻涕',       element: 'metal', organ: '肺', organName: '肺脏', type: '不适' },
+  { text: '皮肤干燥、易过敏',   element: 'metal', organ: '肺', organName: '肺脏', type: '不适' },
+  { text: '容易感冒、免疫力低', element: 'metal', organ: '肺', organName: '肺脏', type: '不适' },
+  { text: '忧虑多思、情绪低落', element: 'metal', organ: '肺', organName: '肺脏', type: '不适' },
+  { text: '声音低微、不想说话', element: 'metal', organ: '肺', organName: '肺脏', type: '不适' },
+  { text: '白天不活动也出汗',   element: 'metal', organ: '肺', organName: '肺脏', type: '不适' },
+  { text: '呼吸顺畅、神清气爽', element: 'metal', organ: '肺', organName: '肺脏', type: '愉悦' },
+  { text: '心情平和、不急不躁', element: 'metal', organ: '肺', organName: '肺脏', type: '愉悦' },
+  { text: '声音洪亮、气足有力', element: 'metal', organ: '肺', organName: '肺脏', type: '愉悦' },
+  // Water - 肾
+  { text: '腰膝酸软、没力气',   element: 'water', organ: '肾', organName: '肾脏', type: '不适' },
+  { text: '耳鸣、听力下降',     element: 'water', organ: '肾', organName: '肾脏', type: '不适' },
+  { text: '脱发、头发干枯',     element: 'water', organ: '肾', organName: '肾脏', type: '不适' },
+  { text: '夜尿多、夜起频繁',   element: 'water', organ: '肾', organName: '肾脏', type: '不适' },
+  { text: '畏寒怕冷、手脚凉',   element: 'water', organ: '肾', organName: '肾脏', type: '不适' },
+  { text: '记忆力减退',         element: 'water', organ: '肾', organName: '肾脏', type: '不适' },
+  { text: '牙齿松动',           element: 'water', organ: '肾', organName: '肾脏', type: '不适' },
+  { text: '早衰感、未老先衰',   element: 'water', organ: '肾', organName: '肾脏', type: '不适' },
+  { text: '精力充沛、腰腿有力', element: 'water', organ: '肾', organName: '肾脏', type: '愉悦' },
+  { text: '睡眠深沉、自然醒来', element: 'water', organ: '肾', organName: '肾脏', type: '愉悦' },
+  { text: '感觉年轻、脚步轻快', element: 'water', organ: '肾', organName: '肾脏', type: '愉悦' },
+  // 混合体质
+  { text: '上热下寒：上半身燥热长痘、下半身冰凉怕冷', element: 'fire', element2: 'water', organ: '心+肾', organName: '心肾', type: '不适' },
+];
+
+const elements = {
+  wood:  { icon: '🌳', name: '角音', element: '木行', organ: '通肝', desc: '疏肝理气、解郁安神', qq: 'https://y.qq.com/n/ryqq_v2/playlist/9349121992' },
+  fire:  { icon: '🔥', name: '徵音', element: '火行', organ: '通心', desc: '养心安神、温通心阳', qq: 'https://y.qq.com/n/ryqq_v2/playlist/9612872037' },
+  earth: { icon: '🏔️', name: '宫音', element: '土行', organ: '通脾', desc: '健脾和胃、调和气血', qq: 'https://y.qq.com/n/ryqq_v2/playlist/9385860435' },
+  metal: { icon: '🌬️', name: '商音', element: '金行', organ: '通肺', desc: '清肃肺气、宣发解表', qq: 'https://y.qq.com/n/ryqq_v2/playlist/9483869706' },
+  water: { icon: '🌊', name: '羽音', element: '水行', organ: '通肾', desc: '滋阴补肾、益精填髓', qq: 'https://y.qq.com/n/ryqq_v2/playlist/9404939387' },
+};
+
+let selected = {};
+let currentFilter = 'all';
+
+function renderAll() {
+  const grid = document.getElementById('symptomGrid');
+  const filtered = currentFilter === 'all' ? symptoms : symptoms.filter(s => s.element === currentFilter);
+
+  grid.innerHTML = filtered.map(s => {
+    const key = s.text;
+    const isSel = !!selected[key];
+    return `<span class="chip${isSel?' selected':''}" data-element="${s.element}" data-type="${s.type}" onclick="toggle('${key}')">${s.text}</span>`;
+  }).join('');
+
+  // Highlight element nav
+  document.querySelectorAll('.elem-nav-item').forEach(el => {
+    el.classList.toggle('active', el.textContent.includes(currentFilter === 'all' ? '全部' : ''));
+    if (currentFilter !== 'all') {
+      if (el.classList.contains(currentFilter)) el.classList.add('active');
+    }
+  });
+
+  // Render results
+  const results = document.getElementById('results');
+  const resultList = document.getElementById('resultList');
+  const matchCount = document.getElementById('matchCount');
+
+  const activeElements = new Set();
+  Object.keys(selected).forEach(k => {
+    if (selected[k]) {
+      const s = symptoms.find(s => s.text === k);
+      if (s) {
+        activeElements.add(s.element);
+        if (s.element2) activeElements.add(s.element2);
+      }
+    }
+  });
+
+  if (activeElements.size > 0) {
+    results.classList.add('show');
+    const count = Object.values(selected).filter(Boolean).length;
+    matchCount.textContent = `（${count}个症状，${activeElements.size}路调理）`;
+
+    resultList.innerHTML = Array.from(activeElements).map((el, i) => {
+      const info = elements[el];
+      const matchedSymptoms = Object.keys(selected)
+        .filter(k => selected[k] && (symptoms.find(s => s.text === k)?.element === el || symptoms.find(s => s.text === k)?.element2 === el));
+      return `
+        <div class="result-card ${el}" style="animation-delay:${i*0.1}s">
+          <div class="result-icon">${info.icon}</div>
+          <div class="result-body">
+            <h3>${info.name} · ${info.element}</h3>
+            <div class="matched">因为您选了：${matchedSymptoms.join('、')}</div>
+            <p class="desc">${info.desc}——${info.organ}，${matchedSymptoms.some(m => m.startsWith('😊')) && matchedSymptoms.some(m => !m.startsWith('😊')) ? '调和与滋养并行' : matchedSymptoms.some(m => m.startsWith('😊')) ? '以清雅之音滋养身心' : '以音调身，安和五脏'}</p>
+            <a href="${info.qq}" target="_blank" class="qq-link">🎵 打开QQ音乐找歌单</a>
+          </div>
+        </div>`;
+    }).join('');
+  } else {
+    results.classList.remove('show');
+  }
+}
+
+function toggle(key) {
+  selected[key] = !selected[key];
+  renderAll();
+}
+
+function filterBy(el) {
+  currentFilter = el;
+  renderAll();
+}
+
+function resetAll() {
+  selected = {};
+  currentFilter = 'all';
+  renderAll();
+}
+
+renderAll();
+</script>
+</body>
+</html>
