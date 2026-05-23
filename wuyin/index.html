@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>五脏有声 · 声各有音</title>
+<title>五音疗法 · 声各有音</title>
 <style>
 
   :root {
@@ -184,8 +184,8 @@
 <body>
 
 <div class="hero">
-  <h1>五脏有声</h1>
-  <p class="subtitle">声各有音</p>
+  <h1>五音疗法</h1>
+  <p class="subtitle">五脏有声，声各有音</p>
 </div>
 
 <div class="container">
@@ -216,89 +216,73 @@
 <div class="footer">五音入五脏 · 以乐为药</div>
 
 <script>
-const symptoms = [
-  // Wood - 肝
-  { text: '心情烦躁、易怒',     element: 'wood', organ: '肝', organName: '肝脏', type: '不适' },
-  { text: '眼睛干涩、视力模糊', element: 'wood', organ: '肝', organName: '肝脏', type: '不适' },
-  { text: '胸闷、胁肋胀痛',     element: 'wood', organ: '肝', organName: '肝脏', type: '不适' },
-  { text: '经前乳房胀痛',       element: 'wood', organ: '肝', organName: '肝脏', type: '不适' },
-  { text: '头晕目眩',           element: 'wood', organ: '肝', organName: '肝脏', type: '不适' },
-  { text: '压力大、焦虑不安',   element: 'wood', organ: '肝', organName: '肝脏', type: '不适' },
-  { text: '容易叹气、胸口堵得慌', element: 'wood', organ: '肝', organName: '肝脏', type: '不适' },
+  const symptoms = [
+  // === 头部 ===
   { text: '偏头痛、太阳穴跳痛', element: 'wood', organ: '肝', organName: '肝脏', type: '不适' },
-  { text: '心情舒畅、豁然开朗', element: 'wood', organ: '肝', organName: '肝脏', type: '愉悦' },
-  { text: '精力充沛、干劲十足', element: 'wood', organ: '肝', organName: '肝脏', type: '愉悦' },
-  { text: '灵感涌动、创造力爆棚', element: 'wood', organ: '肝', organName: '肝脏', type: '愉悦' },
-  // Fire - 心
-  { text: '心烦失眠、入睡困难', element: 'fire', organ: '心', organName: '心脏', type: '不适' },
-  { text: '多梦易醒',           element: 'fire', organ: '心', organName: '心脏', type: '不适' },
+  { text: '头晕目眩',           element: 'wood', organ: '肝', organName: '肝脏', type: '不适' },
+  { text: '耳鸣、听力下降',     element: 'water', organ: '肾', organName: '肾脏', type: '不适' },
+  { text: '脱发、头发干枯',     element: 'water', organ: '肾', organName: '肾脏', type: '不适' },
+  { text: '牙齿松动',           element: 'water', organ: '肾', organName: '肾脏', type: '不适' },
+  // === 面部 & 五官 ===
+  { text: '眼睛干涩、视力模糊', element: 'wood', organ: '肝', organName: '肝脏', type: '不适' },
   { text: '口舌生疮、舌尖红',   element: 'fire', organ: '心', organName: '心脏', type: '不适' },
+  { text: '口淡无味、吃啥都不香', element: 'earth', organ: '脾', organName: '脾胃', type: '不适' },
+  { text: '鼻塞、流鼻涕',       element: 'metal', organ: '肺', organName: '肺脏', type: '不适' },
+  { text: '面色萎黄、气色差',   element: 'earth', organ: '脾', organName: '脾胃', type: '不适' },
+  // === 咽喉 & 心肺 ===
+  { text: '咳嗽、喉咙不适',     element: 'metal', organ: '肺', organName: '肺脏', type: '不适' },
+  { text: '声音低微、不想说话', element: 'metal', organ: '肺', organName: '肺脏', type: '不适' },
+  { text: '容易叹气、胸口堵得慌', element: 'wood', organ: '肝', organName: '肝脏', type: '不适' },
+  { text: '胸闷、胁肋胀痛',     element: 'wood', organ: '肝', organName: '肝脏', type: '不适' },
+  { text: '气短、呼吸不畅',     element: 'metal', organ: '肺', organName: '肺脏', type: '不适' },
   { text: '心慌心悸',           element: 'fire', organ: '心', organName: '心脏', type: '不适' },
-  { text: '精神恍惚、注意力差', element: 'fire', organ: '心', organName: '心脏', type: '不适' },
   { text: '手心发热、盗汗',     element: 'fire', organ: '心', organName: '心脏', type: '不适' },
-  { text: '容易受惊、胆小不安', element: 'fire', organ: '心', organName: '心脏', type: '不适' },
-  { text: '心情愉悦、开心满足', element: 'fire', organ: '心', organName: '心脏', type: '愉悦' },
-  { text: '精神饱满、神采奕奕', element: 'fire', organ: '心', organName: '心脏', type: '愉悦' },
-  { text: '想聊天、分享欲旺盛', element: 'fire', organ: '心', organName: '心脏', type: '愉悦' },
-  { text: '想唱歌、想表达',     element: 'fire', organ: '心', organName: '心脏', type: '愉悦' },
-  // Earth - 脾
+  // === 消化 & 腹部 ===
   { text: '食欲不振、吃不下饭', element: 'earth', organ: '脾', organName: '脾胃', type: '不适' },
   { text: '腹胀、消化不良',     element: 'earth', organ: '脾', organName: '脾胃', type: '不适' },
   { text: '大便稀溏、不成形',   element: 'earth', organ: '脾', organName: '脾胃', type: '不适' },
+  { text: '经前乳房胀痛',       element: 'wood', organ: '肝', organName: '肝脏', type: '不适' },
+  // === 腰腿 & 下半身 ===
+  { text: '腰膝酸软、没力气',   element: 'water', organ: '肾', organName: '肾脏', type: '不适' },
+  { text: '夜尿多、夜起频繁',   element: 'water', organ: '肾', organName: '肾脏', type: '不适' },
+  { text: '畏寒怕冷、手脚凉',   element: 'water', organ: '肾', organName: '肾脏', type: '不适' },
+  // === 皮肤 & 全身 ===
+  { text: '皮肤干燥、易过敏',   element: 'metal', organ: '肺', organName: '肺脏', type: '不适' },
+  { text: '容易感冒、免疫力低', element: 'metal', organ: '肺', organName: '肺脏', type: '不适' },
+  { text: '白天不活动也出汗',   element: 'metal', organ: '肺', organName: '肺脏', type: '不适' },
   { text: '浑身乏力、不想动',   element: 'earth', organ: '脾', organName: '脾胃', type: '不适' },
-  { text: '面色萎黄、气色差',   element: 'earth', organ: '脾', organName: '脾胃', type: '不适' },
-  { text: '口淡无味、吃啥都不香', element: 'earth', organ: '脾', organName: '脾胃', type: '不适' },
-  { text: '思虑过度、脑子停不下来', element: 'earth', organ: '脾', organName: '脾胃', type: '不适' },
   { text: '肌肉松弛、容易水肿', element: 'earth', organ: '脾', organName: '脾胃', type: '不适' },
+  { text: '早衰感、未老先衰',   element: 'water', organ: '肾', organName: '肾脏', type: '不适' },
+  // === 情绪 & 精神 ===
+  { text: '心情烦躁、易怒',     element: 'wood', organ: '肝', organName: '肝脏', type: '不适' },
+  { text: '压力大、焦虑不安',   element: 'wood', organ: '肝', organName: '肝脏', type: '不适' },
+  { text: '心烦失眠、入睡困难', element: 'fire', organ: '心', organName: '心脏', type: '不适' },
+  { text: '多梦易醒',           element: 'fire', organ: '心', organName: '心脏', type: '不适' },
+  { text: '容易受惊、胆小不安', element: 'fire', organ: '心', organName: '心脏', type: '不适' },
+  { text: '精神恍惚、注意力差', element: 'fire', organ: '心', organName: '心脏', type: '不适' },
+  { text: '思虑过度、脑子停不下来', element: 'earth', organ: '脾', organName: '脾胃', type: '不适' },
+  { text: '忧虑多思、情绪低落', element: 'metal', organ: '肺', organName: '肺脏', type: '不适' },
+  { text: '记忆力减退',         element: 'water', organ: '肾', organName: '肾脏', type: '不适' },
+  // === 混合体质 ===
+  { text: '上热下寒：上半身燥热长痘、下半身冰凉怕冷', element: 'fire', element2: 'water', organ: '心+肾', organName: '心肾', type: '不适' },
+  // === 愉悦状态 ===
+  { text: '灵感涌动、创造力爆棚', element: 'wood', organ: '肝', organName: '肝脏', type: '愉悦' },
+  { text: '心情舒畅、豁然开朗', element: 'wood', organ: '肝', organName: '肝脏', type: '愉悦' },
+  { text: '精力充沛、干劲十足', element: 'wood', organ: '肝', organName: '肝脏', type: '愉悦' },
+  { text: '想唱歌、想表达',     element: 'fire', organ: '心', organName: '心脏', type: '愉悦' },
+  { text: '想聊天、分享欲旺盛', element: 'fire', organ: '心', organName: '心脏', type: '愉悦' },
+  { text: '心情愉悦、开心满足', element: 'fire', organ: '心', organName: '心脏', type: '愉悦' },
+  { text: '精神饱满、神采奕奕', element: 'fire', organ: '心', organName: '心脏', type: '愉悦' },
   { text: '胃口好、吃得香',     element: 'earth', organ: '脾', organName: '脾胃', type: '愉悦' },
   { text: '身体轻松、不累不困', element: 'earth', organ: '脾', organName: '脾胃', type: '愉悦' },
   { text: '满足安定、被好好爱着', element: 'earth', organ: '脾', organName: '脾胃', type: '愉悦' },
-  // Metal - 肺
-  { text: '咳嗽、喉咙不适',     element: 'metal', organ: '肺', organName: '肺脏', type: '不适' },
-  { text: '气短、呼吸不畅',     element: 'metal', organ: '肺', organName: '肺脏', type: '不适' },
-  { text: '鼻塞、流鼻涕',       element: 'metal', organ: '肺', organName: '肺脏', type: '不适' },
-  { text: '皮肤干燥、易过敏',   element: 'metal', organ: '肺', organName: '肺脏', type: '不适' },
-  { text: '容易感冒、免疫力低', element: 'metal', organ: '肺', organName: '肺脏', type: '不适' },
-  { text: '忧虑多思、情绪低落', element: 'metal', organ: '肺', organName: '肺脏', type: '不适' },
-  { text: '声音低微、不想说话', element: 'metal', organ: '肺', organName: '肺脏', type: '不适' },
-  { text: '白天不活动也出汗',   element: 'metal', organ: '肺', organName: '肺脏', type: '不适' },
+  { text: '声音洪亮、气足有力', element: 'metal', organ: '肺', organName: '肺脏', type: '愉悦' },
   { text: '呼吸顺畅、神清气爽', element: 'metal', organ: '肺', organName: '肺脏', type: '愉悦' },
   { text: '心情平和、不急不躁', element: 'metal', organ: '肺', organName: '肺脏', type: '愉悦' },
-  { text: '声音洪亮、气足有力', element: 'metal', organ: '肺', organName: '肺脏', type: '愉悦' },
-  // Water - 肾
-  { text: '腰膝酸软、没力气',   element: 'water', organ: '肾', organName: '肾脏', type: '不适' },
-  { text: '耳鸣、听力下降',     element: 'water', organ: '肾', organName: '肾脏', type: '不适' },
-  { text: '脱发、头发干枯',     element: 'water', organ: '肾', organName: '肾脏', type: '不适' },
-  { text: '夜尿多、夜起频繁',   element: 'water', organ: '肾', organName: '肾脏', type: '不适' },
-  { text: '畏寒怕冷、手脚凉',   element: 'water', organ: '肾', organName: '肾脏', type: '不适' },
-  { text: '记忆力减退',         element: 'water', organ: '肾', organName: '肾脏', type: '不适' },
-  { text: '牙齿松动',           element: 'water', organ: '肾', organName: '肾脏', type: '不适' },
-  { text: '早衰感、未老先衰',   element: 'water', organ: '肾', organName: '肾脏', type: '不适' },
+  { text: '感觉年轻、脚步轻快', element: 'water', organ: '肾', organName: '肾脏', type: '愉悦' },
   { text: '精力充沛、腰腿有力', element: 'water', organ: '肾', organName: '肾脏', type: '愉悦' },
   { text: '睡眠深沉、自然醒来', element: 'water', organ: '肾', organName: '肾脏', type: '愉悦' },
-  { text: '感觉年轻、脚步轻快', element: 'water', organ: '肾', organName: '肾脏', type: '愉悦' },
-  // 混合体质
-  { text: '上热下寒：上半身燥热长痘、下半身冰凉怕冷', element: 'fire', element2: 'water', organ: '心+肾', organName: '心肾', type: '不适' },
-];
-
-const elements = {
-  wood:  { icon: '🌳', name: '角音', element: '木行', organ: '通肝', desc: '疏肝理气、解郁安神', qq: 'https://y.qq.com/n/ryqq_v2/playlist/9349121992' },
-  fire:  { icon: '🔥', name: '徵音', element: '火行', organ: '通心', desc: '养心安神、温通心阳', qq: 'https://y.qq.com/n/ryqq_v2/playlist/9612872037' },
-  earth: { icon: '🏔️', name: '宫音', element: '土行', organ: '通脾', desc: '健脾和胃、调和气血', qq: 'https://y.qq.com/n/ryqq_v2/playlist/9385860435' },
-  metal: { icon: '🌬️', name: '商音', element: '金行', organ: '通肺', desc: '清肃肺气、宣发解表', qq: 'https://y.qq.com/n/ryqq_v2/playlist/9483869706' },
-  water: { icon: '🌊', name: '羽音', element: '水行', organ: '通肾', desc: '滋阴补肾、益精填髓', qq: 'https://y.qq.com/n/ryqq_v2/playlist/9404939387' },
-};
-
-let selected = {};
-let currentFilter = 'all';
-
-function renderAll() {
-  const grid = document.getElementById('symptomGrid');
-  const filtered = currentFilter === 'all' ? symptoms : symptoms.filter(s => s.element === currentFilter);
-
-  grid.innerHTML = filtered.map(s => {
-    const key = s.text;
-    const isSel = !!selected[key];
+  ];
     return `<span class="chip${isSel?' selected':''}" data-element="${s.element}" data-type="${s.type}" onclick="toggle('${key}')">${s.text}</span>`;
   }).join('');
 
