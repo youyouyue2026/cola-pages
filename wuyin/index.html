@@ -70,11 +70,16 @@
   .chip:hover { border-color: #C4BBA8; background: #FAF7F2; }
   .chip:active { transform: scale(0.96); }
 
-  .chip.selected[data-element="wood"]  { background: var(--wood-light); border-color: var(--wood); color: var(--wood-dark); }
-  .chip.selected[data-element="fire"]  { background: var(--fire-light); border-color: var(--fire); color: var(--fire-dark); }
-  .chip.selected[data-element="earth"] { background: var(--earth-light); border-color: var(--earth); color: var(--earth-dark); }
-  .chip.selected[data-element="metal"] { background: var(--metal-light); border-color: var(--metal); color: var(--metal-dark); }
-  .chip.selected[data-element="water"] { background: var(--water-light); border-color: var(--water); color: var(--water-dark); }
+.chip.selected[data-element="wood"][data-type="不适"]  { background: var(--wood-light); border-color: var(--wood-dark); color: var(--wood-dark); }
+.chip.selected[data-element="wood"][data-type="愉悦"]  { background: #d4e8d3; border-color: var(--wood); color: var(--wood); }
+.chip.selected[data-element="fire"][data-type="不适"]  { background: var(--fire-light); border-color: var(--fire-dark); color: var(--fire-dark); }
+.chip.selected[data-element="fire"][data-type="愉悦"]  { background: #fce0e0; border-color: var(--fire); color: var(--fire); }
+.chip.selected[data-element="earth"][data-type="不适"] { background: var(--earth-light); border-color: var(--earth-dark); color: var(--earth-dark); }
+.chip.selected[data-element="earth"][data-type="愉悦"] { background: #fbf0d9; border-color: var(--earth); color: #A07818; }
+.chip.selected[data-element="metal"][data-type="不适"] { background: var(--metal-light); border-color: var(--metal-dark); color: var(--metal-dark); }
+.chip.selected[data-element="metal"][data-type="愉悦"] { background: #f0ede5; border-color: var(--metal); color: #8B8068; }
+.chip.selected[data-element="water"][data-type="不适"] { background: var(--water-light); border-color: var(--water-dark); color: var(--water-dark); }
+.chip.selected[data-element="water"][data-type="愉悦"] { background: #dae6f4; border-color: var(--water); color: var(--water); }
 
   /* Element nav */
   .element-nav {
@@ -283,43 +288,62 @@
   { text: '精力充沛、腰腿有力', element: 'water', organ: '肾', organName: '肾脏', type: '愉悦' },
   { text: '睡眠深沉、自然醒来', element: 'water', organ: '肾', organName: '肾脏', type: '愉悦' },
   ];
-    return `<span class="chip${isSel?' selected':''}" data-element="${s.element}" data-type="${s.type}" onclick="toggle('${key}')">${s.text}</span>`;
-  }).join('');
 
-  // Highlight element nav
-  document.querySelectorAll('.elem-nav-item').forEach(el => {
-    el.classList.toggle('active', el.textContent.includes(currentFilter === 'all' ? '全部' : ''));
-    if (currentFilter !== 'all') {
-      if (el.classList.contains(currentFilter)) el.classList.add('active');
-    }
-  });
+  const selected = {};
+  let currentFilter = 'all';
 
-  // Render results
-  const results = document.getElementById('results');
-  const resultList = document.getElementById('resultList');
-  const matchCount = document.getElementById('matchCount');
+  const elements = {
+    wood:  { icon: '🌳', name: '角音', element: '木', organ: '调肝', desc: '疏肝解郁、调畅气机', qq: 'https://y.qq.com/n/ryqq_v2/playlist/9349121992' },
+    fire:  { icon: '🔥', name: '徵音', element: '火', organ: '调心', desc: '养心安神、振奋心阳', qq: 'https://y.qq.com/n/ryqq_v2/playlist/9612872037' },
+    earth: { icon: '🏔️', name: '宫音', element: '土', organ: '调脾', desc: '健脾和胃、稳定情绪', qq: 'https://y.qq.com/n/ryqq_v2/playlist/9385860435' },
+    metal: { icon: '🌬️', name: '商音', element: '金', organ: '调肺', desc: '润肺养气、宣散郁滞', qq: 'https://y.qq.com/n/ryqq_v2/playlist/9483869706' },
+    water: { icon: '🌊', name: '羽音', element: '水', organ: '调肾', desc: '补肾益精、安神定志', qq: 'https://y.qq.com/n/ryqq_v2/playlist/9404939387' },
+  };
 
-  const activeElements = new Set();
-  Object.keys(selected).forEach(k => {
-    if (selected[k]) {
-      const s = symptoms.find(s => s.text === k);
-      if (s) {
-        activeElements.add(s.element);
-        if (s.element2) activeElements.add(s.element2);
+  function renderAll() {
+    const chipsEl = document.getElementById('symptomGrid');
+    chipsEl.innerHTML = Object.keys(symptoms).map(k => {
+      const s = symptoms[k];
+      const isSel = selected[s.text];
+      return `<span class="chip${isSel?' selected':''}" data-element="${s.element}" data-type="${s.type}" onclick="toggle('${s.text}')">${s.text}</span>`;
+    }).join('');
+
+    // Highlight element nav
+    document.querySelectorAll('.elem-nav-item').forEach(el => {
+      el.classList.toggle('active', false);
+      if (currentFilter === 'all') {
+        if (el.textContent.includes('全部')) el.classList.add('active');
+      } else {
+        if (el.classList.contains(currentFilter)) el.classList.add('active');
       }
-    }
-  });
+    });
 
-  if (activeElements.size > 0) {
-    results.classList.add('show');
-    const count = Object.values(selected).filter(Boolean).length;
-    matchCount.textContent = `（${count}个症状，${activeElements.size}路调理）`;
+    // Render results
+    const results = document.getElementById('results');
+    const resultList = document.getElementById('resultList');
+    const matchCount = document.getElementById('matchCount');
 
-    resultList.innerHTML = Array.from(activeElements).map((el, i) => {
-      const info = elements[el];
-      const matchedSymptoms = Object.keys(selected)
-        .filter(k => selected[k] && (symptoms.find(s => s.text === k)?.element === el || symptoms.find(s => s.text === k)?.element2 === el));
-      return `
+    const activeElements = new Set();
+    Object.keys(selected).forEach(k => {
+      if (selected[k]) {
+        const s = symptoms.find(s => s.text === k);
+        if (s) {
+          activeElements.add(s.element);
+          if (s.element2) activeElements.add(s.element2);
+        }
+      }
+    });
+
+    if (activeElements.size > 0) {
+      results.classList.add('show');
+      const count = Object.values(selected).filter(Boolean).length;
+      matchCount.textContent = `（${count}个症状，${activeElements.size}路调理）`;
+
+      resultList.innerHTML = Array.from(activeElements).map((el, i) => {
+        const info = elements[el];
+        const matchedSymptoms = Object.keys(selected)
+          .filter(k => selected[k] && (symptoms.find(s => s.text === k)?.element === el || symptoms.find(s => s.text === k)?.element2 === el));
+        return `
         <div class="result-card ${el}" style="animation-delay:${i*0.1}s">
           <div class="result-icon">${info.icon}</div>
           <div class="result-body">
@@ -329,29 +353,29 @@
             <a href="${info.qq}" target="_blank" class="qq-link">🎵 打开QQ音乐找歌单</a>
           </div>
         </div>`;
-    }).join('');
-  } else {
-    results.classList.remove('show');
+      }).join('');
+    } else {
+      results.classList.remove('show');
+    }
   }
-}
 
-function toggle(key) {
-  selected[key] = !selected[key];
+  function toggle(key) {
+    selected[key] = !selected[key];
+    renderAll();
+  }
+
+  function filterBy(el) {
+    currentFilter = el;
+    renderAll();
+  }
+
+  function resetAll() {
+    selected = {};
+    currentFilter = 'all';
+    renderAll();
+  }
+
   renderAll();
-}
-
-function filterBy(el) {
-  currentFilter = el;
-  renderAll();
-}
-
-function resetAll() {
-  selected = {};
-  currentFilter = 'all';
-  renderAll();
-}
-
-renderAll();
 </script>
 </body>
 </html>
